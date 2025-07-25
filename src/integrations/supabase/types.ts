@@ -44,6 +44,84 @@ export type Database = {
         }
         Relationships: []
       }
+      expense_comments: {
+        Row: {
+          comment: string
+          created_at: string
+          expense_id: string | null
+          group_expense_id: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string
+          expense_id?: string | null
+          group_expense_id?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          expense_id?: string | null
+          group_expense_id?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expense_comments_expense_id_fkey"
+            columns: ["expense_id"]
+            isOneToOne: false
+            referencedRelation: "expenses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expense_comments_group_expense_id_fkey"
+            columns: ["group_expense_id"]
+            isOneToOne: false
+            referencedRelation: "group_expenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expense_reports: {
+        Row: {
+          created_at: string
+          filters: Json
+          id: string
+          name: string
+          report_type: string
+          settings: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          filters: Json
+          id?: string
+          name: string
+          report_type: string
+          settings: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          filters?: Json
+          id?: string
+          name?: string
+          report_type?: string
+          settings?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       expenses: {
         Row: {
           amount: number
@@ -79,6 +157,277 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      group_challenges: {
+        Row: {
+          challenge_type: string
+          created_at: string
+          created_by: string
+          description: string | null
+          group_id: string
+          id: string
+          is_active: boolean
+          name: string
+          rewards: Json | null
+          rules: Json
+          target_amount: number | null
+          target_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          challenge_type: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          group_id: string
+          id?: string
+          is_active?: boolean
+          name: string
+          rewards?: Json | null
+          rules: Json
+          target_amount?: number | null
+          target_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          challenge_type?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          group_id?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          rewards?: Json | null
+          rules?: Json
+          target_amount?: number | null
+          target_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_challenges_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "savings_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_expense_approvals: {
+        Row: {
+          approver_id: string
+          comment: string | null
+          created_at: string
+          expense_id: string
+          id: string
+          status: string
+        }
+        Insert: {
+          approver_id: string
+          comment?: string | null
+          created_at?: string
+          expense_id: string
+          id?: string
+          status: string
+        }
+        Update: {
+          approver_id?: string
+          comment?: string | null
+          created_at?: string
+          expense_id?: string
+          id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_expense_approvals_expense_id_fkey"
+            columns: ["expense_id"]
+            isOneToOne: false
+            referencedRelation: "group_expenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_expenses: {
+        Row: {
+          amount: number
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          created_at: string
+          date: string
+          description: string | null
+          group_id: string
+          id: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          approved_at?: string | null
+          approved_by?: string | null
+          category: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          group_id: string
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          group_id?: string
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_expenses_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "savings_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_messages: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          message: string
+          message_type: string
+          referenced_expense_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          message: string
+          message_type?: string
+          referenced_expense_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          message?: string
+          message_type?: string
+          referenced_expense_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_messages_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "savings_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_messages_referenced_expense_id_fkey"
+            columns: ["referenced_expense_id"]
+            isOneToOne: false
+            referencedRelation: "group_expenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_notifications: {
+        Row: {
+          created_at: string
+          data: Json | null
+          group_id: string
+          id: string
+          message: string
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          group_id: string
+          id?: string
+          message: string
+          read?: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          group_id?: string
+          id?: string
+          message?: string
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_notifications_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "savings_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_permissions: {
+        Row: {
+          created_at: string
+          granted_by: string
+          group_id: string
+          id: string
+          permission: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by: string
+          group_id: string
+          id?: string
+          permission: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string
+          group_id?: string
+          id?: string
+          permission?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_permissions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "savings_groups"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
