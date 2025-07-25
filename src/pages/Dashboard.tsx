@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -9,7 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { RootState } from '@/store/store';
 import { setExpenses, setFilter } from '@/store/slices/expenseSlice';
-import { DollarSign, Plus, TrendingUp, Calendar, LogOut, User } from 'lucide-react';
+import { DollarSign, Plus, TrendingUp, Calendar, LogOut, User, PiggyBank } from 'lucide-react';
 import AddExpenseModal from '@/components/AddExpenseModal';
 import ExpenseList from '@/components/ExpenseList';
 import ProfileSetup from '@/components/ProfileSetup';
@@ -112,6 +113,12 @@ const Dashboard = () => {
             <h1 className="text-xl font-bold">ExpenseTracker AI</h1>
           </div>
           <div className="flex items-center gap-2">
+            <Link to="/savings">
+              <Button variant="ghost" className="flex items-center gap-2">
+                <PiggyBank className="h-4 w-4" />
+                <span className="hidden sm:inline">Savings</span>
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               size="icon"

@@ -113,6 +113,118 @@ export type Database = {
         }
         Relationships: []
       }
+      savings_contributions: {
+        Row: {
+          amount: number
+          created_at: string
+          date: string
+          description: string | null
+          group_id: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          date?: string
+          description?: string | null
+          group_id: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          date?: string
+          description?: string | null
+          group_id?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "savings_contributions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "savings_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      savings_group_members: {
+        Row: {
+          group_id: string
+          id: string
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "savings_group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "savings_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      savings_groups: {
+        Row: {
+          created_at: string
+          created_by: string
+          current_amount: number
+          description: string | null
+          goal_amount: number
+          id: string
+          is_active: boolean
+          name: string
+          target_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          current_amount?: number
+          description?: string | null
+          goal_amount: number
+          id?: string
+          is_active?: boolean
+          name: string
+          target_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          current_amount?: number
+          description?: string | null
+          goal_amount?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          target_date?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       weekly_insights: {
         Row: {
           created_at: string

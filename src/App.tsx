@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import AuthWrapper from '@/components/AuthWrapper';
 import Dashboard from "./pages/Dashboard";
+import SavingsPage from "./pages/SavingsPage";
+import SavingsGroupDetail from "./pages/SavingsGroupDetail";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -22,6 +24,8 @@ const App = () => (
           <AuthWrapper>
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/savings" element={<SavingsPage />} />
+              <Route path="/savings/:groupId" element={<SavingsGroupDetail />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
