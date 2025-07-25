@@ -103,8 +103,12 @@ const SavingsPage = () => {
     e.preventDefault();
     if (!user) return;
 
+    console.log('Creating group with data:', formData);
+    console.log('User ID:', user.id);
+
     try {
       // Create the group
+      console.log('Inserting group...');
       const { data: groupData, error: groupError } = await supabase
         .from('savings_groups')
         .insert({
@@ -117,9 +121,11 @@ const SavingsPage = () => {
         .select()
         .single();
 
+      console.log('Group insert result:', { groupData, groupError });
       if (groupError) throw groupError;
 
       // Add creator as admin member
+      console.log('Adding creator as admin member...');
       const { error: memberError } = await supabase
         .from('savings_group_members')
         .insert({
@@ -128,6 +134,7 @@ const SavingsPage = () => {
           role: 'admin',
         });
 
+      console.log('Member insert result:', { memberError });
       if (memberError) throw memberError;
 
       setFormData({ name: '', description: '', goal_amount: '', target_date: '' });
@@ -139,9 +146,10 @@ const SavingsPage = () => {
         description: "Collaborative savings created successfully!",
       });
     } catch (error) {
+      console.error('Group creation error:', error);
       toast({
         title: "Error",
-        description: "Failed to create collaborative savings",
+        description: `Failed to create collaborative savings: ${error.message || 'Unknown error'}`,
         variant: "destructive",
       });
     }
