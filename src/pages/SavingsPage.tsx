@@ -115,6 +115,14 @@ const SavingsPage = () => {
         throw new Error('User not authenticated in Supabase');
       }
 
+      // Test if we can access our profile (this tests auth context)
+      const { data: profileTest, error: profileError } = await supabase
+        .from('profiles')
+        .select('user_id')
+        .eq('user_id', supabaseUser.id)
+        .single();
+      console.log('Profile lookup test:', profileTest, 'Error:', profileError);
+
       // Create the group
       console.log('Inserting group...');
       const { data: groupData, error: groupError } = await supabase
