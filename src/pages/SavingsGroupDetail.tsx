@@ -119,7 +119,7 @@ const SavingsGroupDetail = () => {
         .from('savings_group_members')
         .select(`
           *,
-          profiles!savings_group_members_user_id_fkey(full_name, email)
+          profiles(full_name, email)
         `)
         .eq('group_id', groupId);
 
@@ -151,7 +151,7 @@ const SavingsGroupDetail = () => {
         .from('savings_contributions')
         .select(`
           *,
-          profiles!savings_contributions_user_id_fkey(full_name, email)
+          profiles(full_name, email)
         `)
         .eq('group_id', groupId)
         .order('date', { ascending: false });

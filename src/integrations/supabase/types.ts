@@ -222,6 +222,13 @@ export type Database = {
             referencedRelation: "savings_groups"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "savings_group_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       savings_groups: {
