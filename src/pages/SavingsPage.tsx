@@ -107,6 +107,14 @@ const SavingsPage = () => {
     console.log('User ID:', user.id);
 
     try {
+      // First check if user is authenticated in Supabase
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+      console.log('Supabase authenticated user:', supabaseUser);
+      
+      if (!supabaseUser) {
+        throw new Error('User not authenticated in Supabase');
+      }
+
       // Create the group
       console.log('Inserting group...');
       const { data: groupData, error: groupError } = await supabase
@@ -116,7 +124,7 @@ const SavingsPage = () => {
           description: formData.description || null,
           goal_amount: parseFloat(formData.goal_amount),
           target_date: formData.target_date || null,
-          created_by: user.id,
+          created_by: supabaseUser.id,
         })
         .select()
         .single();
@@ -130,7 +138,7 @@ const SavingsPage = () => {
         .from('savings_group_members')
         .insert({
           group_id: groupData.id,
-          user_id: user.id,
+          user_id: supabaseUser.id,
           role: 'admin',
         });
 
