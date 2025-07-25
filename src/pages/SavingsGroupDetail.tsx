@@ -213,14 +213,59 @@ const SavingsGroupDetail = () => {
 
   const handleInviteMember = async (e: React.FormEvent) => {
     e.preventDefault();
-    // This would typically involve sending an email invitation
-    // For now, we'll show a success message
-    toast({
-      title: "Invitation Sent",
-      description: `Invitation sent to ${inviteEmail}`,
-    });
-    setInviteEmail('');
-    setShowInviteMember(false);
+    if (!user || !groupId) return;
+
+    try {
+      // Check if user is already a member or has pending invitation
+      const { data: existingMember } = await supabase
+        .from('savings_group_members')
+        .select('*')
+        .eq('group_id', groupId)
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      const { data: existingInvitation } = await supabase
+        .from('savings_group_invitations')
+        .select('*')
+        .eq('group_id', groupId)
+        .eq('invited_user_email', inviteEmail)
+        .eq('status', 'pending')
+        .maybeSingle();
+
+      if (existingInvitation) {
+        toast({
+          title: "Already Invited",
+          description: "This user already has a pending invitation",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Create invitation
+      const { error } = await supabase
+        .from('savings_group_invitations')
+        .insert({
+          group_id: groupId,
+          invited_user_email: inviteEmail,
+          invited_by: user.id,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Invitation Sent",
+        description: `Invitation sent to ${inviteEmail}`,
+      });
+      setInviteEmail('');
+      setShowInviteMember(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send invitation",
+        variant: "destructive",
+      });
+    }
   };
 
   const getInitials = (name?: string, email?: string) => {

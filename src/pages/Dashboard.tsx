@@ -16,6 +16,7 @@ import ExpenseList from '@/components/ExpenseList';
 import ProfileSetup from '@/components/ProfileSetup';
 import SmartInsights from '@/components/SmartInsights';
 import BudgetGoals from '@/components/BudgetGoals';
+import PendingInvitations from '@/components/PendingInvitations';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -179,6 +180,9 @@ const Dashboard = () => {
 
         {/* Budget Goals */}
         <BudgetGoals />
+
+        {/* Pending Invitations */}
+        <PendingInvitations />
 
         {/* Expenses Section */}
         <Card>

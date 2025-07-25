@@ -154,6 +154,44 @@ export type Database = {
           },
         ]
       }
+      savings_group_invitations: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          invited_by: string
+          invited_user_email: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          invited_by: string
+          invited_user_email: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          invited_by?: string
+          invited_user_email?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "savings_group_invitations_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "savings_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       savings_group_members: {
         Row: {
           group_id: string
