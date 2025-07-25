@@ -28,7 +28,17 @@ const getCategoryColor = (category: string) => {
 const ExpenseList = () => {
   const dispatch = useDispatch();
   const { expenses, currentFilter } = useSelector((state: RootState) => state.expenses);
+  const { profile } = useSelector((state: RootState) => state.profile);
   const { toast } = useToast();
+
+  const getCurrencySymbol = (currency: string) => {
+    const symbols: Record<string, string> = {
+      'USD': '$', 'EUR': '€', 'GBP': '£', 'INR': '₹', 'CAD': 'C$', 'AUD': 'A$',
+    };
+    return symbols[currency] || '$';
+  };
+
+  const currencySymbol = getCurrencySymbol(profile?.currency || 'USD');
 
   const handleDeleteExpense = async (expenseId: string) => {
     try {
@@ -104,7 +114,7 @@ const ExpenseList = () => {
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <DollarSign className="h-4 w-4" />
-                    <span className="font-medium">${expense.amount}</span>
+                    <span className="font-medium">{currencySymbol}{expense.amount}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />

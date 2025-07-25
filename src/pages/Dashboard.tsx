@@ -13,6 +13,8 @@ import { DollarSign, Plus, TrendingUp, Calendar, LogOut, User } from 'lucide-rea
 import AddExpenseModal from '@/components/AddExpenseModal';
 import ExpenseList from '@/components/ExpenseList';
 import ProfileSetup from '@/components/ProfileSetup';
+import SmartInsights from '@/components/SmartInsights';
+import BudgetGoals from '@/components/BudgetGoals';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -165,31 +167,11 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* AI Insights Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              AI Insights
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="p-4 bg-muted rounded-lg">
-                <h4 className="font-medium mb-2">This Week's Analysis</h4>
-                <p className="text-sm text-muted-foreground">
-                  🤖 Based on your spending patterns, you're spending 23% more on food than last week. 
-                  Consider meal planning to optimize your budget. Your transportation costs have decreased by 15% - great work!
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">💡 Suggestion: Set daily limits</Badge>
-                <Badge variant="secondary">📊 Track: Food expenses</Badge>
-                <Badge variant="secondary">✅ Good: Transportation savings</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Smart Insights */}
+        <SmartInsights />
+
+        {/* Budget Goals */}
+        <BudgetGoals />
 
         {/* Expenses Section */}
         <Card>

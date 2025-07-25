@@ -16,8 +16,10 @@ interface BudgetGoal {
   id: string;
   category: string;
   amount: number;
-  period: 'daily' | 'weekly' | 'monthly';
+  period: string;
   user_id: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 const BudgetGoals = () => {
