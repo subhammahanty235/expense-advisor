@@ -9,6 +9,7 @@ import AuthWrapper from '@/components/AuthWrapper';
 import Dashboard from "./pages/Dashboard";
 import SavingsPage from "./pages/SavingsPage";
 import SavingsGroupDetail from "./pages/SavingsGroupDetail";
+import Analytics from "./pages/Analytics";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -24,6 +25,7 @@ const App = () => (
           <AuthWrapper>
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/analytics" element={<Analytics />} />
               <Route path="/savings" element={<SavingsPage />} />
               <Route path="/savings/:groupId" element={<SavingsGroupDetail />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
