@@ -83,6 +83,19 @@ const Dashboard = () => {
     return filtered.reduce((sum, expense) => sum + expense.amount, 0);
   };
 
+  const getCurrencySymbol = (currency: string) => {
+    const symbols: Record<string, string> = {
+      'USD': '$',
+      'EUR': '€',
+      'GBP': '£',
+      'INR': '₹',
+      'CAD': 'C$',
+      'AUD': 'A$',
+    };
+    return symbols[currency] || '$';
+  };
+
+  const currencySymbol = getCurrencySymbol(profile?.currency || 'USD');
   const totalExpenses = calculateTotalExpenses();
   const remainingSalary = (profile?.monthly_salary || 0) - totalExpenses;
   const spentPercentage = profile?.monthly_salary ? (totalExpenses / profile.monthly_salary) * 100 : 0;
@@ -120,7 +133,7 @@ const Dashboard = () => {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${totalExpenses.toFixed(2)}</div>
+              <div className="text-2xl font-bold">{currencySymbol}{totalExpenses.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">
                 {currentFilter} spending
               </p>
@@ -133,7 +146,7 @@ const Dashboard = () => {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${remainingSalary.toFixed(2)}</div>
+              <div className="text-2xl font-bold">{currencySymbol}{remainingSalary.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">
                 from monthly salary
               </p>
