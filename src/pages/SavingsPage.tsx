@@ -91,7 +91,7 @@ const SavingsPage = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to fetch savings groups",
+        description: "Failed to fetch collaborative savings",
         variant: "destructive",
       });
     } finally {
@@ -136,12 +136,12 @@ const SavingsPage = () => {
       
       toast({
         title: "Success",
-        description: "Savings group created successfully!",
+        description: "Collaborative savings created successfully!",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to create savings group",
+        description: "Failed to create collaborative savings",
         variant: "destructive",
       });
     }
@@ -191,7 +191,7 @@ const SavingsPage = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Create Savings Group</DialogTitle>
+                <DialogTitle>Create Collaborative Savings</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleCreateGroup} className="space-y-4">
                 <div className="space-y-2">
@@ -292,15 +292,15 @@ const SavingsPage = () => {
 
         {/* Savings Groups */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Your Savings Groups</h2>
+          <h2 className="text-2xl font-bold">Your Collaborative Savings</h2>
           
           {groups.length === 0 ? (
             <Card>
               <CardContent className="p-8 text-center">
                 <PiggyBank className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Savings Groups Yet</h3>
+                <h3 className="text-lg font-medium mb-2">No Collaborative Savings Yet</h3>
                 <p className="text-muted-foreground mb-4">
-                  Create your first savings group and start collaborating with friends and family!
+                  Create your first collaborative savings and start saving with friends and family!
                 </p>
                 <Button onClick={() => setShowCreateModal(true)}>
                   <Plus className="h-4 w-4 mr-2" />
