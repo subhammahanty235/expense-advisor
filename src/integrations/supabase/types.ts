@@ -241,6 +241,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_group_expense_approvals_approver_id"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "group_expense_approvals_expense_id_fkey"
             columns: ["expense_id"]
             isOneToOne: false
@@ -297,6 +304,20 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_group_expenses_approved_by"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_group_expenses_user_id"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "group_expenses_group_id_fkey"
             columns: ["group_id"]
             isOneToOne: false
@@ -334,6 +355,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_group_messages_user_id"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "group_messages_group_id_fkey"
             columns: ["group_id"]
@@ -494,6 +522,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_savings_contributions_user_id"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "savings_contributions_group_id_fkey"
             columns: ["group_id"]
