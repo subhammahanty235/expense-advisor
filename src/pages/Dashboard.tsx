@@ -114,6 +114,12 @@ const Dashboard = () => {
             <h1 className="text-xl font-bold">ExpenseTracker AI</h1>
           </div>
           <div className="flex items-center gap-2">
+            <Link to="/analytics">
+              <Button variant="ghost" className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4" />
+                <span className="hidden sm:inline">Analytics</span>
+              </Button>
+            </Link>
             <Link to="/savings">
               <Button variant="ghost" className="flex items-center gap-2">
                 <PiggyBank className="h-4 w-4" />

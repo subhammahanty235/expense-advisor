@@ -18,6 +18,7 @@ import {
   PiggyBank, Mail, UserPlus, TrendingUp 
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { GroupExpenseManagement } from '@/components/collaboration/GroupExpenseManagement';
 
 interface SavingsGroup {
   id: string;
@@ -544,6 +545,9 @@ const SavingsGroupDetail = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Group Expense Management */}
+        <GroupExpenseManagement groupId={groupId!} userRole={userRole as "admin" | "member"} />
       </div>
     </div>
   );
