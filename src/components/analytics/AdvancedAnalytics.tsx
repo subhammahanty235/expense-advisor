@@ -368,37 +368,58 @@ export const AdvancedAnalytics: React.FC = () => {
             <CardContent>
               <div className="h-96">
                 {chartType === 'line' && (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={analytics.daily}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Line type="monotone" dataKey="amount" stroke="hsl(var(--primary))" strokeWidth={2} />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <ChartContainer
+                    config={{
+                      amount: { label: "Amount", color: "hsl(var(--primary))" }
+                    }}
+                    className="h-full"
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={analytics.daily}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Line type="monotone" dataKey="amount" stroke="hsl(var(--primary))" strokeWidth={2} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
                 )}
                 {chartType === 'bar' && (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={analytics.daily}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="amount" fill="hsl(var(--primary))" />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <ChartContainer
+                    config={{
+                      amount: { label: "Amount", color: "hsl(var(--primary))" }
+                    }}
+                    className="h-full"
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={analytics.daily}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Bar dataKey="amount" fill="hsl(var(--primary))" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
                 )}
                 {chartType === 'area' && (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={analytics.daily}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Area type="monotone" dataKey="amount" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.3} />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <ChartContainer
+                    config={{
+                      amount: { label: "Amount", color: "hsl(var(--primary))" }
+                    }}
+                    className="h-full"
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={analytics.daily}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Area type="monotone" dataKey="amount" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.3} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
                 )}
               </div>
             </CardContent>
