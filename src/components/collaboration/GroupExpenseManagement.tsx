@@ -91,7 +91,7 @@ export const GroupExpenseManagement: React.FC<Props> = ({ groupId, userRole }) =
   const { user } = useSelector((state: RootState) => state.auth);
   const { profile } = useSelector((state: RootState) => state.profile);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
   useEffect(() => {
     if (groupId && user) {
@@ -346,20 +346,29 @@ export const GroupExpenseManagement: React.FC<Props> = ({ groupId, userRole }) =
 
               <div>
                 <Label htmlFor="category">Category</Label>
-                <Select onValueChange={(value) => register('category').onChange({ target: { value } })}>
+                <Select 
+                  onValueChange={(value) => setValue('category', value)} 
+                  {...register('category', { required: 'Category is required' })}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="food">Food & Dining</SelectItem>
-                    <SelectItem value="transport">Transportation</SelectItem>
+                    <SelectItem value="food_dining">Food & Dining</SelectItem>
+                    <SelectItem value="transportation">Transportation</SelectItem>
                     <SelectItem value="utilities">Utilities</SelectItem>
                     <SelectItem value="entertainment">Entertainment</SelectItem>
                     <SelectItem value="shopping">Shopping</SelectItem>
-                    <SelectItem value="health">Health & Medical</SelectItem>
+                    <SelectItem value="healthcare">Health & Medical</SelectItem>
+                    <SelectItem value="education">Education</SelectItem>
+                    <SelectItem value="travel">Travel</SelectItem>
+                    <SelectItem value="subscriptions">Subscriptions</SelectItem>
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.category && (
+                  <p className="text-sm text-destructive">{String(errors.category.message)}</p>
+                )}
               </div>
 
               <div>
