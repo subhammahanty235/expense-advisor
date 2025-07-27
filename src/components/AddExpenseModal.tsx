@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
 import { RootState } from '@/store/store';
 import { addExpense } from '@/store/slices/expenseSlice';
 import { Loader2 } from 'lucide-react';
@@ -49,6 +50,23 @@ const AddExpenseModal = ({ open, onOpenChange, onExpenseAdded }: AddExpenseModal
     if (!user) return;
 
     setLoading(true);
+    
+    // Validate category is set
+    if (!formData.category) {
+      toast({
+        title: "Error",
+        description: "Please select a category",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
+    console.log('Submitting expense with data:', {
+      ...formData,
+      amount: parseFloat(formData.amount)
+    });
+
     try {
       const { data, error } = await supabase
         .from('expenses')
@@ -56,7 +74,7 @@ const AddExpenseModal = ({ open, onOpenChange, onExpenseAdded }: AddExpenseModal
           user_id: user.id,
           title: formData.title,
           amount: parseFloat(formData.amount),
-          category: formData.category as any,
+          category: formData.category as Database['public']['Enums']['expense_category'],
           description: formData.description || null,
           date: formData.date,
         })
@@ -84,9 +102,10 @@ const AddExpenseModal = ({ open, onOpenChange, onExpenseAdded }: AddExpenseModal
       
       onOpenChange(false);
     } catch (error) {
+      console.error('Error adding expense:', error);
       toast({
         title: "Error",
-        description: "Failed to add expense",
+        description: error instanceof Error ? error.message : "Failed to add expense",
         variant: "destructive",
       });
     } finally {
