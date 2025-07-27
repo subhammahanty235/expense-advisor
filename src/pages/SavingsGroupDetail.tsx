@@ -298,12 +298,12 @@ const SavingsGroupDetail = () => {
         console.error('Error fetching contributions:', contributionsError);
       }
 
-      // Fetch all group expenses - simplified query first
+      // Fetch all group expenses - use specific foreign key relationship
       const { data: allExpenses, error: expensesError } = await supabase
         .from('group_expenses')
         .select(`
           *,
-          profiles(full_name, email)
+          profiles!fk_group_expenses_user_id(full_name, email)
         `)
         .eq('group_id', groupId)
         .order('date', { ascending: false });
