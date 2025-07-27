@@ -15,10 +15,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { RootState } from '@/store/store';
 import { 
   ArrowLeft, Plus, Users, Calendar, Target, Trash2, 
-  PiggyBank, Mail, UserPlus, TrendingUp 
+  PiggyBank, Mail, UserPlus, TrendingUp, Download 
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { GroupExpenseManagement } from '@/components/collaboration/GroupExpenseManagement';
+import * as XLSX from 'xlsx';
 
 interface SavingsGroup {
   id: string;
@@ -279,6 +280,138 @@ const SavingsGroupDetail = () => {
     return 'U';
   };
 
+  const exportTransactions = async (format: 'json' | 'excel') => {
+    if (!groupId) return;
+
+    try {
+      // Fetch all contributions
+      const { data: allContributions } = await supabase
+        .from('savings_contributions')
+        .select(`
+          *,
+          profiles(full_name, email)
+        `)
+        .eq('group_id', groupId)
+        .order('date', { ascending: false });
+
+      // Fetch all group expenses
+      const { data: allExpenses } = await supabase
+        .from('group_expenses')
+        .select(`
+          *,
+          profiles!group_expenses_user_id_fkey(full_name, email)
+        `)
+        .eq('group_id', groupId)
+        .order('date', { ascending: false });
+
+      // Calculate totals
+      const totalContributions = allContributions?.reduce((sum, c) => sum + c.amount, 0) || 0;
+      const totalExpenses = allExpenses?.reduce((sum, e) => sum + (e.status === 'approved' ? e.amount : 0), 0) || 0;
+      const netSavings = totalContributions - totalExpenses;
+
+      const exportData = {
+        groupInfo: {
+          name: group?.name,
+          goalAmount: group?.goal_amount,
+          currentAmount: group?.current_amount,
+          targetDate: group?.target_date,
+          exportDate: new Date().toISOString().split('T')[0]
+        },
+        summary: {
+          totalContributions,
+          totalExpenses,
+          netSavings,
+          currency: profile?.currency || 'USD'
+        },
+        contributions: allContributions?.map(c => ({
+          date: c.date,
+          amount: c.amount,
+          description: c.description,
+          contributor: c.profiles?.full_name || c.profiles?.email || 'Unknown',
+          type: 'Contribution'
+        })) || [],
+        expenses: allExpenses?.map(e => ({
+          date: e.date,
+          amount: e.amount,
+          title: e.title,
+          description: e.description,
+          category: e.category,
+          status: e.status,
+          spentBy: (e as any).profiles?.full_name || (e as any).profiles?.email || 'Unknown',
+          type: 'Expense'
+        })) || []
+      };
+
+      if (format === 'json') {
+        // Export as JSON
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${group?.name || 'group'}_transactions_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } else {
+        // Export as Excel
+        const wb = XLSX.utils.book_new();
+        
+        // Summary sheet
+        const summaryData = [
+          ['Group Name', exportData.groupInfo.name],
+          ['Goal Amount', exportData.groupInfo.goalAmount],
+          ['Current Amount', exportData.groupInfo.currentAmount],
+          ['Target Date', exportData.groupInfo.targetDate],
+          ['Export Date', exportData.groupInfo.exportDate],
+          ['Currency', exportData.summary.currency],
+          [],
+          ['Total Contributions', exportData.summary.totalContributions],
+          ['Total Expenses', exportData.summary.totalExpenses],
+          ['Net Savings', exportData.summary.netSavings]
+        ];
+        const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+        XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+
+        // Contributions sheet
+        if (exportData.contributions.length > 0) {
+          const contributionsWs = XLSX.utils.json_to_sheet(exportData.contributions);
+          XLSX.utils.book_append_sheet(wb, contributionsWs, 'Contributions');
+        }
+
+        // Expenses sheet
+        if (exportData.expenses.length > 0) {
+          const expensesWs = XLSX.utils.json_to_sheet(exportData.expenses);
+          XLSX.utils.book_append_sheet(wb, expensesWs, 'Expenses');
+        }
+
+        // All transactions combined
+        const allTransactions = [
+          ...exportData.contributions,
+          ...exportData.expenses
+        ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        
+        if (allTransactions.length > 0) {
+          const allTransactionsWs = XLSX.utils.json_to_sheet(allTransactions);
+          XLSX.utils.book_append_sheet(wb, allTransactionsWs, 'All Transactions');
+        }
+
+        XLSX.writeFile(wb, `${group?.name || 'group'}_transactions_${new Date().toISOString().split('T')[0]}.xlsx`);
+      }
+
+      toast({
+        title: "Export Successful",
+        description: `Transactions exported as ${format.toUpperCase()}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Failed to export transactions",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (loading) {
     return <div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>;
   }
@@ -318,6 +451,22 @@ const SavingsGroupDetail = () => {
             </div>
           </div>
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportTransactions('excel')}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export Excel
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportTransactions('json')}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export JSON
+            </Button>
             {userRole === 'admin' && (
               <Dialog open={showInviteMember} onOpenChange={setShowInviteMember}>
                 <DialogTrigger asChild>
