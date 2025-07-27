@@ -285,7 +285,7 @@ const SavingsGroupDetail = () => {
 
     try {
       // Fetch all contributions
-      const { data: allContributions } = await supabase
+      const { data: allContributions, error: contributionsError } = await supabase
         .from('savings_contributions')
         .select(`
           *,
@@ -294,15 +294,26 @@ const SavingsGroupDetail = () => {
         .eq('group_id', groupId)
         .order('date', { ascending: false });
 
-      // Fetch all group expenses
-      const { data: allExpenses } = await supabase
+      if (contributionsError) {
+        console.error('Error fetching contributions:', contributionsError);
+      }
+
+      // Fetch all group expenses - simplified query first
+      const { data: allExpenses, error: expensesError } = await supabase
         .from('group_expenses')
         .select(`
           *,
-          profiles!group_expenses_user_id_fkey(full_name, email)
+          profiles(full_name, email)
         `)
         .eq('group_id', groupId)
         .order('date', { ascending: false });
+
+      if (expensesError) {
+        console.error('Error fetching expenses:', expensesError);
+      }
+
+      console.log('Fetched contributions:', allContributions);
+      console.log('Fetched expenses:', allExpenses);
 
       // Calculate totals
       const totalContributions = allContributions?.reduce((sum, c) => sum + c.amount, 0) || 0;
