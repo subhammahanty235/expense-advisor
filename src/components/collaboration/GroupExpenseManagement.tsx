@@ -106,7 +106,7 @@ export const GroupExpenseManagement: React.FC<Props> = ({ groupId, userRole }) =
         .from('group_expenses')
         .select(`
           *,
-          profiles(full_name, email)
+          profiles!fk_group_expenses_user_id(full_name, email)
         `)
         .eq('group_id', groupId)
         .order('created_at', { ascending: false });
@@ -144,32 +144,42 @@ export const GroupExpenseManagement: React.FC<Props> = ({ groupId, userRole }) =
     if (!user) return;
 
     try {
+      // Check if user is admin or if they're the only member in the group
+      const shouldAutoApprove = userRole === 'admin';
+      
+      const expenseData = {
+        group_id: groupId,
+        user_id: user.id,
+        title: data.title,
+        amount: parseFloat(data.amount),
+        category: data.category,
+        description: data.description,
+        date: data.date,
+        status: shouldAutoApprove ? 'approved' : 'pending',
+        ...(shouldAutoApprove && {
+          approved_by: user.id,
+          approved_at: new Date().toISOString()
+        })
+      };
+
       const { error } = await supabase
         .from('group_expenses')
-        .insert({
-          group_id: groupId,
-          user_id: user.id,
-          title: data.title,
-          amount: parseFloat(data.amount),
-          category: data.category,
-          description: data.description,
-          date: data.date,
-          status: 'pending'
-        });
+        .insert(expenseData);
 
       if (error) throw error;
 
       // Send system message
+      const statusMessage = shouldAutoApprove ? 'Added and approved expense' : 'Added new expense';
       await supabase
         .from('group_messages')
         .insert({
           group_id: groupId,
           user_id: user.id,
-          message: `Added new expense: ${data.title} (${getCurrencySymbol()}${data.amount})`,
+          message: `${statusMessage}: ${data.title} (${getCurrencySymbol()}${data.amount})`,
           message_type: 'system'
         });
 
-      toast.success('Expense added successfully');
+      toast.success(`Expense ${shouldAutoApprove ? 'added and approved' : 'added'} successfully`);
       setShowAddExpense(false);
       reset();
       fetchGroupExpenses();
